@@ -49,16 +49,12 @@ class Previewer : public QWidget, public Ui::Form
     Q_OBJECT
 
 public:
-    Previewer(QWidget *parent = 0);
-
-    void setBaseUrl(const QUrl &url);
+    Previewer();
 
 public slots:
-    void on_previewButton_clicked();
     void on_webView_loadFinished();
 
 private:
-    QUrl baseUrl;
 
     void examineChildElements(const QWebElement &parentElement);
 };

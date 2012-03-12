@@ -43,10 +43,9 @@
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebElement>
 #include "previewer.h"
+#include "bashcommander.h"
 
-//! [0]
-Previewer::Previewer(QWidget *parent)
-    : QWidget(parent)
+Previewer::Previewer()
 {
     setupUi(this);
 
@@ -55,21 +54,6 @@ Previewer::Previewer(QWidget *parent)
     frame->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
     frame->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
 }
-//! [0]
-
-void Previewer::setBaseUrl(const QUrl &url)
-{
-    baseUrl = url;
-}
-
-//! [1]
-void Previewer::on_previewButton_clicked()
-{
-    // Update the contents in web viewer
-    //QString text = plainTextEdit->toPlainText();
-    //webView->setHtml(text, baseUrl);
-}
-//! [1]
 
 void Previewer::on_webView_loadFinished()
 {
@@ -86,19 +70,21 @@ void Previewer::examineChildElements(const QWebElement &parentElement)
     {
         qDebug() << "TAG_NAME: " << element.tagName();
 
-        if (element.tagName() == "SCRIPT")
+        if (element.tagName() == "SCRIPT"
+            && element.hasAttribute("LANGUAGE")
+            && element.attribute("LANGUAGE") == "bash")
         {
-            qDebug() << "Es Script!";
-            if (element.hasAttribute("LANGUAGE") && element.attribute("LANGUAGE") == "bash")
-            {
-                qDebug() << "Y de Bash!";
-                qDebug() << "toPlainText() = " << element.toPlainText();
+            qDebug() << "Bash Script Detected!";
+            qDebug() << "content:" << element.toPlainText();
 
-                element.setOuterXml("<span id=\"temp1\"></span>");
-                QWebElement newElem = parentElement.findFirst("[id='temp1']");
-                newElem.setPlainText("CONTENIDO");
-                qDebug() << newElem.tagName();
-            }
+            BashCommander bash;
+            QString output = bash.executeCommand(element.toPlainText());
+
+            element.setOuterXml("<span id=\"id001\"></span>");
+            QWebElement newElem = parentElement.findFirst("[id='id001']");
+
+            newElem.setPlainText(output);
+            qDebug() << "execution output:" << output;
         }
 
         examineChildElements(element);

@@ -45,10 +45,8 @@
 #include "previewer.h"
 
 QT_BEGIN_NAMESPACE
-
 QT_END_NAMESPACE
 
-//! [0]
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -56,16 +54,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-private slots:
-    void updateTextEdit();
-//! [0]
-
-//! [1]
 private:
     Previewer *centralWidget;
 
     void openWidgetHTML();
 };
-//! [1]
 
 #endif

@@ -1,9 +1,11 @@
 QT      +=  webkit network
 HEADERS =   previewer.h \
-            mainwindow.h
+            mainwindow.h \
+    bashcommander.h
 SOURCES =   main.cpp \
             previewer.cpp \
-            mainwindow.cpp
+            mainwindow.cpp \
+    bashcommander.cpp
 FORMS   =   previewer.ui
 
 # install

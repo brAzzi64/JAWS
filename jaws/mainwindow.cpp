@@ -42,33 +42,29 @@
 #include <QtWebKit>
 #include "mainwindow.h"
 
-//! [0]
 MainWindow::MainWindow()
 {
+    // configure transparency
     setStyleSheet("background:transparent;");
     setAttribute(Qt::WA_TranslucentBackground);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnBottomHint);
 
-    centralWidget = new Previewer(this);
+    centralWidget = new Previewer();
     setCentralWidget(centralWidget);
 
-    connect(centralWidget->webView, SIGNAL(loadFinished(bool)), this, SLOT(updateTextEdit()));
-
-    setFixedSize(300,300);
+    setFixedSize(300, 300);
 
     openWidgetHTML();
 }
-//! [0]
 
-//! [4]
 void MainWindow::openWidgetHTML()
 {
-    QString fileName = tr("/home/brazzi/Development/Qt/examples/webkit/previewer/html/index.html");
-    QFile file(fileName);
+    QFileInfo fileInfo("../jaws/html/index.html");
+    QFile file(fileInfo.filePath());
 
-    if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"),
-            file.errorString());
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
         return;
     }
 
@@ -76,12 +72,5 @@ void MainWindow::openWidgetHTML()
     QString output = out.readAll();
 
     // display contents
-    centralWidget->webView->setHtml(output, QUrl::fromLocalFile(fileName));
-    //centralWidget->setBaseUrl();
-}
-//! [4]
-
-void MainWindow::updateTextEdit()
-{
-
+    centralWidget->webView->setHtml(output, QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
 }
