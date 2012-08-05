@@ -84,7 +84,7 @@ void Previewer::examineChildElements(const QWebElement &parentElement)
             QWebElement newElem = parentElement.findFirst("[id='id001']");
 
             newElem.setPlainText(output);
-            qDebug() << "execution output:" << output;
+            qDebug() << "execution standard output:" << output;
         }
 
         examineChildElements(element);
